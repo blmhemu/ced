@@ -4,4 +4,4 @@ Project aims to act as an load balancer by pointing the A records for external p
 
 ## Acknowledgments
 
-Much of the *helper code and design* is inspired and taken from [fabio](https://github.com/fabiolb/fabio).
+Much of the *design and helper code* is inspired and taken from [fabio](https://github.com/fabiolb/fabio)
