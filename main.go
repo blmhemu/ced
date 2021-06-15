@@ -2,12 +2,27 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"runtime"
 
+	"github.com/blmhemu/consul-ext-dns/config"
 	"github.com/hashicorp/consul/api"
 )
 
+var version = "0.1"
+
 func main() {
 
+	cfg, err := config.Load(os.Args, os.Environ())
+	if err != nil {
+		log.Printf("[FATAL] %s. %s", version, err)
+		os.Exit(1)
+	}
+	if cfg == nil {
+		fmt.Printf("%s %s\n", version, runtime.Version())
+		return
+	}
 	config := api.Config{
 		Address: "127.0.0.1:8500",
 		Scheme:  "http",
