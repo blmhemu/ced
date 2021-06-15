@@ -23,16 +23,12 @@ func main() {
 		fmt.Printf("%s %s\n", version, runtime.Version())
 		return
 	}
-	config := api.Config{
-		Address: "127.0.0.1:8500",
-		Scheme:  "http",
-	}
 
 	// We recieve updates on this channel
 	updates := make(chan []*api.ServiceEntry)
 
 	// Watch for any changes in service
-	go watchLB(&config, updates)
+	go watchLB(cfg, updates)
 
 	// Process any changes
 	oldIPSet := make(map[string]struct{})
@@ -89,8 +85,11 @@ func (qo *MyQueryOptions) fetchUpdates(client *api.Client) ([]*api.ServiceEntry,
 	return svccfg, err
 }
 
-func watchLB(config *api.Config, updates chan []*api.ServiceEntry) {
-	client, err := api.NewClient(config)
+func watchLB(cfg *config.Config, updates chan []*api.ServiceEntry) {
+	client, err := api.NewClient(&api.Config{
+		Address: cfg.Consul.Addr,
+		Scheme:  cfg.Consul.Scheme,
+	})
 	if err != nil {
 		panic(err)
 	}
