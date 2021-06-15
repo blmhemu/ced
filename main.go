@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	// See if we can use zerolog
+	"fmt"
 	"log"
 	"os"
 	"runtime"
