@@ -2,6 +2,6 @@
 
 Project aims to act as an load balancer by pointing the A records for external providers like cloudflare to the ip address of node of healthy load balancer.
 
-## Thanks
+## Acknowledgments
 
-Most of the config parsing code has been taken from [fabio](https://github.com/fabiolb/fabio). Huge thanks to fabio team for doing the manual work of parsing the configs.
+Much of the *helper code and design* is inspired and taken from [fabio](https://github.com/fabiolb/fabio).
