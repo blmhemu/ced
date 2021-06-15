@@ -104,6 +104,8 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 
 	f.StringVar(&cfg.Consul.Addr, "consul.addr", defaultConfig.Consul.Addr, "Address of Consul agent")
 	f.StringVar(&cfg.Consul.Scheme, "consul.scheme", defaultConfig.Consul.Scheme, "Scheme of Consul agent (http/https)")
+	f.StringVar(&cfg.DNS.Backend, "dns.backend", defaultConfig.DNS.Backend, "Name of DNS backend to use")
+	f.StringVar(&cfg.DNS.Cloudflare.APIToken, "dns.cloudflare.apitoken", defaultConfig.DNS.Cloudflare.APIToken, "API Token to connect to cloudflare")
 
 	// parse configuration
 	if err := f.ParseFlags(cmdline[1:], environ, envprefix, props); err != nil {
