@@ -99,7 +99,7 @@ func (p *PBClient) updateState() error {
 
 func getIPIDMap(dnsResp *porkbun.DNSResponse) map[string]string {
 	ipIDMap := make(map[string]string)
-	if dnsResp.Records == nil {
+	if len(dnsResp.Records) == 0 {
 		return ipIDMap
 	}
 	for _, rec := range dnsResp.Records {
