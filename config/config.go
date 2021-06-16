@@ -13,11 +13,17 @@ type Consul struct {
 type DNS struct {
 	Backend    string
 	Cloudflare Cloudflare
+	Porkbun    Porkbun
 }
 
 type Cloudflare struct {
 	APIToken string
 	Email    string
+}
+
+type Porkbun struct {
+	APIKey       string
+	SecretAPIKey string
 }
 
 var defaultConfig = Config{
@@ -38,4 +44,9 @@ var defaultDNS = DNS{
 var defaultCloudflare = Cloudflare{
 	APIToken: "",
 	Email:    "",
+}
+
+var defaultPorkbun = Porkbun{
+	APIKey:       "",
+	SecretAPIKey: "",
 }

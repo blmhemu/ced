@@ -9,12 +9,10 @@ import (
 
 	"github.com/blmhemu/consul-ext-dns/config"
 	"github.com/blmhemu/consul-ext-dns/dns"
-	"github.com/blmhemu/consul-ext-dns/dns/cloudflare"
+	"github.com/blmhemu/consul-ext-dns/dns/porkbun"
 	"github.com/blmhemu/consul-ext-dns/exit"
 	"github.com/hashicorp/consul/api"
 )
-
-const Cloudflare = "Cloudflare"
 
 var version = "0.1"
 
@@ -50,8 +48,8 @@ func main() {
 func initBackend(cfg *config.Config) {
 	var err error
 	switch cfg.DNS.Backend {
-	case Cloudflare:
-		dns.Default, err = cloudflare.NewBackend(&cfg.DNS.Cloudflare)
+	case dns.Porkbun:
+		dns.Default, err = porkbun.NewBackend(&cfg.DNS.Porkbun)
 	}
 	if err != nil {
 		// Print and exit
