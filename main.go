@@ -8,7 +8,7 @@ import (
 	"runtime"
 
 	"github.com/blmhemu/consul-ext-dns/config"
-	"github.com/blmhemu/consul-ext-dns/dns"
+	dnsbackend "github.com/blmhemu/consul-ext-dns/dns"
 	"github.com/blmhemu/consul-ext-dns/dns/porkbun"
 	"github.com/blmhemu/consul-ext-dns/exit"
 	"github.com/hashicorp/consul/api"
@@ -49,8 +49,8 @@ func main() {
 func initBackend(cfg *config.Config) {
 	var err error
 	switch cfg.DNS.Backend {
-	case dns.Porkbun:
-		dns.Default, err = porkbun.NewBackend(&cfg.DNS.Porkbun)
+	case dnsbackend.Porkbun:
+		dnsbackend.Default, err = porkbun.NewBackend(&cfg.DNS.Porkbun)
 	}
 	if err != nil {
 		// Print and exit
@@ -92,7 +92,7 @@ func pushUpdatesToBackend(updates chan []*api.ServiceEntry) {
 		for _, svc := range svcs {
 			newIPSet.Insert(svc.Node.Address)
 		}
-		dns.Default.WriteRecords(newIPSet)
+		dnsbackend.Default.WriteRecords(newIPSet)
 	}
 }
 

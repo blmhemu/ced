@@ -14,6 +14,8 @@ const A = "A"
 
 type PBClient struct {
 	Client *porkbun.Client
+	Domain string
+	Name   string
 	State  map[string]string // IP -> Porkbun ID
 }
 
@@ -31,19 +33,62 @@ func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
 	if err != nil {
 		return nil, err
 	}
-	pbclient := &PBClient{Client: client}
-	pbclient.updateState(cfg.Domain)
+	pbclient := &PBClient{Client: client, Domain: cfg.Domain, Name: cfg.Name}
+	pbclient.updateState()
 	return pbclient, nil
 }
 
 func (p *PBClient) WriteRecords(newRecords sets.String) error {
-
+	currRecords := p.fetchIPSet()
+	deletions := currRecords.Difference(newRecords)
+	additions := newRecords.Difference(*currRecords)
+	// No additions / deletions ? Good return
+	if !deletions.HasAny() && !additions.HasAny() {
+		return nil
+	}
+	// This means the LB is down
+	// No need to update until it is back up again
+	if !newRecords.HasAny() {
+		return nil
+	}
+	// Porkbun does not have delete all function.
+	// To minimize API calls, we instead use edit when available
+	for {
+		newip, newany := additions.PopAny()
+		oldip, oldany := deletions.PopAny()
+		if newany {
+			dnsRecord := porkbun.DNSRecord{
+				Type:    A,
+				Content: newip,
+			}
+			if p.Name != "" {
+				dnsRecord.Name = p.Name
+			}
+			if oldany {
+				p.Client.EditRecord(p.Domain, p.State[oldip], &dnsRecord)
+			} else {
+				p.Client.CreateRecord(p.Domain, &dnsRecord)
+			}
+		} else if oldany {
+			p.Client.DeleteRecord(p.Domain, p.State[oldip])
+		} else {
+			break
+		}
+	}
 	return nil
 }
 
 // Helper Land
-func (p *PBClient) updateState(domain string) error {
-	dnsResp, err := p.Client.RetrieveRecords(domain)
+func (p *PBClient) fetchIPSet() *sets.String {
+	ipSet := sets.NewString()
+	for ip := range p.State {
+		ipSet.Insert(ip)
+	}
+	return &ipSet
+}
+
+func (p *PBClient) updateState() error {
+	dnsResp, err := p.Client.RetrieveRecords(p.Domain)
 	if err != nil {
 		return err
 	}
@@ -53,7 +98,7 @@ func (p *PBClient) updateState(domain string) error {
 }
 
 func getIPIDMap(dnsResp *porkbun.DNSResponse) map[string]string {
-	var ipIDMap map[string]string
+	ipIDMap := make(map[string]string)
 	if dnsResp.Records == nil {
 		return ipIDMap
 	}

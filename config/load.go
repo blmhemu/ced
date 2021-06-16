@@ -108,6 +108,7 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	f.StringVar(&cfg.DNS.Porkbun.APIKey, "dns.porkbun.apiKey", defaultConfig.DNS.Porkbun.APIKey, "API Token to connect to cloudflare")
 	f.StringVar(&cfg.DNS.Porkbun.SecretAPIKey, "dns.porkbun.secretapiKey", defaultConfig.DNS.Porkbun.SecretAPIKey, "Email for cloudflare account")
 	f.StringVar(&cfg.DNS.Porkbun.Domain, "dns.porkbun.domain", defaultPorkbun.Domain, "Porkbun domain to be updated")
+	f.StringVar(&cfg.DNS.Porkbun.Name, "dns.porkbun.name", defaultPorkbun.Name, "Porkbun subdmain domain to be updated \nUse * for wildcard record \nUnset or \"\" for root domain")
 
 	// Parse configuration
 	if err := f.ParseFlags(cmdline[1:], environ, envprefix, props); err != nil {
