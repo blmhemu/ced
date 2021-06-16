@@ -17,6 +17,7 @@ type DNS struct {
 
 type Cloudflare struct {
 	APIToken string
+	Email    string
 }
 
 var defaultConfig = Config{
@@ -36,4 +37,5 @@ var defaultDNS = DNS{
 
 var defaultCloudflare = Cloudflare{
 	APIToken: "",
+	Email:    "",
 }
