@@ -12,6 +12,8 @@ github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:l
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
 github.com/blmhemu/porkbun-go v0.0.0-20210616125920-b25a44d4805c h1:poST0LhwCcY0WWxm7zKV1qMlhJz2uVLUlTjud86mEXA=
 github.com/blmhemu/porkbun-go v0.0.0-20210616125920-b25a44d4805c/go.mod h1:xxlH8yjTsRnjBDVBwhCwsmnd/XNW4kl9qvZO2Z6N2dI=
+github.com/blmhemu/porkbun-go v0.0.0-20210616164340-d7d6ee56b581 h1:RfF37oTVdrxj59R0xcvUWqi+uwk87pQ1qljm1tDohe4=
+github.com/blmhemu/porkbun-go v0.0.0-20210616164340-d7d6ee56b581/go.mod h1:xxlH8yjTsRnjBDVBwhCwsmnd/XNW4kl9qvZO2Z6N2dI=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

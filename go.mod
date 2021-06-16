@@ -1,7 +1,7 @@
 module github.com/blmhemu/consul-ext-dns
 
 require (
-	github.com/blmhemu/porkbun-go v0.0.0-20210616125920-b25a44d4805c
+	github.com/blmhemu/porkbun-go v0.0.0-20210616164340-d7d6ee56b581
 	github.com/hashicorp/consul/api v1.8.1
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/magiconair/properties v1.8.5

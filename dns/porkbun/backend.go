@@ -1,6 +1,7 @@
 package porkbun
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -38,6 +39,7 @@ func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
 	return pbclient, nil
 }
 
+// How to handle the bunch of errors ??? Currently just loggin them.
 func (p *PBClient) WriteRecords(newRecords sets.String) error {
 	currRecords := p.fetchIPSet()
 	deletions := currRecords.Difference(newRecords)
@@ -53,6 +55,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 	}
 	// Porkbun does not have delete all function.
 	// To minimize API calls, we instead use edit when available
+	needStateUpdate := false
 	for {
 		newip, newany := additions.PopAny()
 		oldip, oldany := deletions.PopAny()
@@ -65,14 +68,37 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 				dnsRecord.Name = p.Name
 			}
 			if oldany {
-				p.Client.EditRecord(p.Domain, p.State[oldip], &dnsRecord)
+				err := p.Client.EditRecord(p.Domain, p.State[oldip], &dnsRecord)
+				if err != nil {
+					fmt.Printf("[ERROR] Failed editing record %s", err)
+					needStateUpdate = true
+				} else {
+					p.State[newip] = p.State[oldip]
+					delete(p.State, oldip)
+				}
 			} else {
-				p.Client.CreateRecord(p.Domain, &dnsRecord)
+				id, err := p.Client.CreateRecord(p.Domain, &dnsRecord)
+				if err != nil {
+					fmt.Printf("[ERROR] Failed creating record %s", err)
+					needStateUpdate = true
+				} else {
+					p.State[newip] = id
+					delete(p.State, oldip)
+				}
 			}
 		} else if oldany {
-			p.Client.DeleteRecord(p.Domain, p.State[oldip])
+			if err := p.Client.DeleteRecord(p.Domain, p.State[oldip]); err != nil {
+				fmt.Printf("[ERROR] Failed deleting record %s", err)
+				needStateUpdate = true
+			}
 		} else {
 			break
+		}
+	}
+	if needStateUpdate {
+		if err := p.updateState(); err != nil {
+			fmt.Printf("[ERROR] Failed updating state %s", err)
+			return err
 		}
 	}
 	return nil
@@ -87,13 +113,13 @@ func (p *PBClient) fetchIPSet() *sets.String {
 	return &ipSet
 }
 
+// Removes existing state and fetches new state from remote
 func (p *PBClient) updateState() error {
 	dnsResp, err := p.Client.RetrieveRecords(p.Domain)
 	if err != nil {
 		return err
 	}
-	ipIDMap := getIPIDMap(dnsResp)
-	p.State = ipIDMap
+	p.State = getIPIDMap(dnsResp)
 	return nil
 }
 
