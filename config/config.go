@@ -24,6 +24,7 @@ type Cloudflare struct {
 type Porkbun struct {
 	APIKey       string
 	SecretAPIKey string
+	Domain       string
 }
 
 var defaultConfig = Config{
@@ -39,6 +40,7 @@ var defaultConsul = Consul{
 var defaultDNS = DNS{
 	Backend:    "",
 	Cloudflare: defaultCloudflare,
+	Porkbun:    defaultPorkbun,
 }
 
 var defaultCloudflare = Cloudflare{
@@ -49,4 +51,5 @@ var defaultCloudflare = Cloudflare{
 var defaultPorkbun = Porkbun{
 	APIKey:       "",
 	SecretAPIKey: "",
+	Domain:       "",
 }

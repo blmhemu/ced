@@ -97,6 +97,7 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	cfg = &Config{}
 	f := NewFlagSet(cmdline[0], flag.ExitOnError)
 
+	var domains string
 	// dummy values which were parsed earlier
 	f.String("cfg", "", "Path or URL to config file")
 	f.Bool("v", false, "Show version")
@@ -105,9 +106,14 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	f.StringVar(&cfg.Consul.Addr, "consul.addr", defaultConfig.Consul.Addr, "Address of Consul agent")
 	f.StringVar(&cfg.Consul.Scheme, "consul.scheme", defaultConfig.Consul.Scheme, "Scheme of Consul agent (http/https)")
 	f.StringVar(&cfg.DNS.Backend, "dns.backend", defaultConfig.DNS.Backend, "Name of DNS backend to use")
-	f.StringVar(&cfg.DNS.Cloudflare.APIToken, "dns.cloudflare.apitoken", defaultConfig.DNS.Cloudflare.APIToken, "API Token to connect to cloudflare")
-	f.StringVar(&cfg.DNS.Cloudflare.Email, "dns.cloudflare.email", defaultConfig.DNS.Cloudflare.Email, "Email for cloudflare account")
+	f.StringVar(&cfg.DNS.Porkbun.APIKey, "dns.porkbun.apiKey", defaultConfig.DNS.Porkbun.APIKey, "API Token to connect to cloudflare")
+	f.StringVar(&cfg.DNS.Porkbun.SecretAPIKey, "dns.porkbun.secretapiKey", defaultConfig.DNS.Porkbun.SecretAPIKey, "Email for cloudflare account")
+	f.StringVar(&cfg.DNS.Porkbun.Domain, "dns.domains", "", "Space separated list of domains")
 
+	if domains == "" {
+		return nil, fmt.Errorf("Domains not provided")
+	}
+	cfg.DNS.Domains = strings.Split(domains, " ")
 	// parse configuration
 	if err := f.ParseFlags(cmdline[1:], environ, envprefix, props); err != nil {
 		return nil, err
