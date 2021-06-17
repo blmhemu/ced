@@ -117,20 +117,20 @@ func (p *PBClient) fetchIPSet() *sets.String {
 
 // Removes existing state and fetches new state from remote
 func (p *PBClient) updateState() error {
-	dnsResp, err := p.Client.RetrieveRecords(p.Domain)
+	dnsRecs, err := p.Client.RetrieveRecords(p.Domain)
 	if err != nil {
 		return err
 	}
-	p.State = getIPIDMap(dnsResp)
+	p.State = getIPIDMap(dnsRecs)
 	return nil
 }
 
-func getIPIDMap(dnsResp *porkbun.DNSResponse) map[string]string {
+func getIPIDMap(dnsRecs []porkbun.DNSRecord) map[string]string {
 	ipIDMap := make(map[string]string)
-	if len(dnsResp.Records) == 0 {
+	if len(dnsRecs) == 0 {
 		return ipIDMap
 	}
-	for _, rec := range dnsResp.Records {
+	for _, rec := range dnsRecs {
 		if rec.Type == A {
 			ipIDMap[rec.Content] = rec.ID
 		}

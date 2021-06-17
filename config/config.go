@@ -1,8 +1,9 @@
 package config
 
 type Config struct {
-	Consul Consul
-	DNS    DNS
+	Service string
+	Consul  Consul
+	DNS     DNS
 }
 
 type Consul struct {
@@ -29,8 +30,9 @@ type Porkbun struct {
 }
 
 var defaultConfig = Config{
-	Consul: defaultConsul,
-	DNS:    defaultDNS,
+	Service: "",
+	Consul:  defaultConsul,
+	DNS:     defaultDNS,
 }
 
 var defaultConsul = Consul{

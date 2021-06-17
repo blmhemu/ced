@@ -77,7 +77,7 @@ func watchLB(cfg *config.Config, updates chan []*api.ServiceEntry) {
 	}
 
 	for {
-		svccfg, err := qo.fetchUpdates(client)
+		svccfg, err := qo.fetchUpdates(cfg.Service, client)
 		if err != nil {
 			panic(err)
 		}
@@ -100,9 +100,8 @@ func pushUpdatesToBackend(updates chan []*api.ServiceEntry) {
 // Helper land
 type ConsulQueryOpts struct{ api.QueryOptions }
 
-func (qo *ConsulQueryOpts) fetchUpdates(client *api.Client) ([]*api.ServiceEntry, error) {
-	svccfg, qm, err := client.Health().Service("fabio", "", true, &qo.QueryOptions)
-
+func (qo *ConsulQueryOpts) fetchUpdates(service string, client *api.Client) ([]*api.ServiceEntry, error) {
+	svccfg, qm, err := client.Health().Service(service, "", true, &qo.QueryOptions)
 	if err != nil || qm.LastIndex <= qo.WaitIndex {
 		qo.WaitIndex = 0
 	} else {

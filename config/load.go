@@ -102,6 +102,7 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	f.Bool("v", false, "Show version")
 	f.Bool("version", false, "Show version")
 
+	f.StringVar(&cfg.Service, "service", defaultConfig.Service, "Consul service to track (Generally the load balancer)")
 	f.StringVar(&cfg.Consul.Addr, "consul.addr", defaultConfig.Consul.Addr, "Address of Consul agent")
 	f.StringVar(&cfg.Consul.Scheme, "consul.scheme", defaultConfig.Consul.Scheme, "Scheme of Consul agent (http/https)")
 	f.StringVar(&cfg.DNS.Backend, "dns.backend", defaultConfig.DNS.Backend, "Name of DNS backend to use")
@@ -115,10 +116,14 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 		return nil, err
 	}
 
-	// Only cloudflare dns backend is supported atm.
+	// A service must be provided
+	if cfg.Service == "" {
+		return nil, fmt.Errorf("No service was provided to track")
+	}
+	// Only porkbun dns backend is supported atm.
 	if cfg.DNS.Backend == "" {
 		return nil, fmt.Errorf("DNS backend not provided")
-	} else if cfg.DNS.Backend != "Cloudflare" {
+	} else if cfg.DNS.Backend != "Porkbun" {
 		return nil, fmt.Errorf("DNS backend `%s` not supported", cfg.DNS.Backend)
 	}
 
