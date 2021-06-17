@@ -4,7 +4,7 @@ Project aims to act as an load balancer by pointing the A records for external p
 
 ## Build
 
-```
+```sh
 export CED_VERSION="0.1.1"
 # Create git tags
 git tag -a v$CED_VERSION
