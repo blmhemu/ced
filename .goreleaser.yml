@@ -36,12 +36,5 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-dockers:
-  - dockerfile: Dockerfile-goreleaser
-    image_templates:
-      - 'blmhemu/ced:latest'
-      - 'blmhemu/ced:{{ .Version }}'
-    # extra_files:
-    #   - fabio.properties
 env_files:
   github_token: ~/.config/goreleaser/gh_token
