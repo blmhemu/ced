@@ -125,7 +125,7 @@ func (p *PBClient) updateState() error {
 	return nil
 }
 
-func getIPIDMap(dnsRecs []porkbun.DNSRecord) map[string]string {
+func getIPIDMap(dnsRecs []*porkbun.DNSRecord) map[string]string {
 	ipIDMap := make(map[string]string)
 	if len(dnsRecs) == 0 {
 		return ipIDMap
