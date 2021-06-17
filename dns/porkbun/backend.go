@@ -54,7 +54,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 		return nil
 	}
 	// Porkbun does not have delete all function.
-	// To minimize API calls, we instead use edit when available
+	// To minimize API calls, we instead use (this seemingly complex) edits when available
 	anyErrors := false
 	for {
 		newip, newany := additions.PopAny()
