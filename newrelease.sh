@@ -1,4 +1,4 @@
-export CED_VERSION="0.1.1"
+export CED_VERSION="0.1.2"
 # Create git tags
 git tag -a v$CED_VERSION &&
 git push origin v$CED_VERSION &&
