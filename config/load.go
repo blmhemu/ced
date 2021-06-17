@@ -123,7 +123,7 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	// Only porkbun dns backend is supported atm.
 	if cfg.DNS.Backend == "" {
 		return nil, fmt.Errorf("DNS backend not provided")
-	} else if cfg.DNS.Backend != "Porkbun" {
+	} else if cfg.DNS.Backend != "porkbun" {
 		return nil, fmt.Errorf("DNS backend `%s` not supported", cfg.DNS.Backend)
 	}
 
