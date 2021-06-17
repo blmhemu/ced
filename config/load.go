@@ -106,8 +106,8 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	f.StringVar(&cfg.Consul.Addr, "consul.addr", defaultConfig.Consul.Addr, "Address of Consul agent")
 	f.StringVar(&cfg.Consul.Scheme, "consul.scheme", defaultConfig.Consul.Scheme, "Scheme of Consul agent (http/https)")
 	f.StringVar(&cfg.DNS.Backend, "dns.backend", defaultConfig.DNS.Backend, "Name of DNS backend to use")
-	f.StringVar(&cfg.DNS.Porkbun.APIKey, "dns.porkbun.apiKey", defaultConfig.DNS.Porkbun.APIKey, "API Token to connect to cloudflare")
-	f.StringVar(&cfg.DNS.Porkbun.SecretAPIKey, "dns.porkbun.secretapiKey", defaultConfig.DNS.Porkbun.SecretAPIKey, "Email for cloudflare account")
+	f.StringVar(&cfg.DNS.Porkbun.APIKey, "dns.porkbun.apikey", defaultConfig.DNS.Porkbun.APIKey, "APIKey to connect to porkbun")
+	f.StringVar(&cfg.DNS.Porkbun.SecretAPIKey, "dns.porkbun.secretapikey", defaultConfig.DNS.Porkbun.SecretAPIKey, "SecretAPIKey to connect to porkbun")
 	f.StringVar(&cfg.DNS.Porkbun.Domain, "dns.porkbun.domain", defaultPorkbun.Domain, "Porkbun domain to be updated")
 	f.StringVar(&cfg.DNS.Porkbun.Name, "dns.porkbun.name", defaultPorkbun.Name, "Porkbun subdmain domain to be updated \nUse * for wildcard record \nUnset or \"\" for root domain")
 
