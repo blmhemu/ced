@@ -1,4 +1,4 @@
-module github.com/blmhemu/consul-ext-dns
+module github.com/blmhemu/ced
 
 require (
 	github.com/blmhemu/porkbun-go v0.0.0-20210617050038-6ba23bd38847

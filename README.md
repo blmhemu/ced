@@ -1,4 +1,4 @@
-# consul-ext-dns
+# CED (consul-ext-dns)
 
 Project aims to act as an load balancer by pointing the A records for external providers like cloudflare to the ip address of node of healthy load balancer.
 
