@@ -21,6 +21,7 @@ type Porkbun struct {
 	SecretAPIKey string
 	Domain       string
 	Name         string
+	TTL          string
 }
 
 var defaultConfig = Config{
@@ -44,4 +45,5 @@ var defaultPorkbun = Porkbun{
 	SecretAPIKey: "",
 	Domain:       "",
 	Name:         "",
+	TTL:          "300",
 }

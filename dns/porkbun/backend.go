@@ -3,6 +3,7 @@ package porkbun
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/blmhemu/ced/config"
@@ -17,10 +18,18 @@ type PBClient struct {
 	Client *porkbun.Client
 	Domain string
 	Name   string
+	TTL    string
 	State  map[string]string // IP -> Porkbun ID
 }
 
 func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
+	i, err := strconv.Atoi(cfg.TTL)
+	if err != nil {
+		return nil, err
+	}
+	if i < 300 {
+		return nil, fmt.Errorf("TTL should not be less than 300")
+	}
 	pbCfg := porkbun.Config{
 		Auth: porkbun.Auth{
 			APIKey:       cfg.APIKey,
@@ -34,7 +43,7 @@ func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
 	if err != nil {
 		return nil, err
 	}
-	pbclient := &PBClient{Client: client, Domain: cfg.Domain, Name: cfg.Name}
+	pbclient := &PBClient{Client: client, Domain: cfg.Domain, Name: cfg.Name, TTL: cfg.TTL}
 	// The below line updates the initial state.
 	// The creds will also be verified here.
 	if err := pbclient.updateState(); err != nil {
@@ -68,6 +77,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 			dnsRecord := porkbun.DNSRecord{
 				Type:    A,
 				Content: newip,
+				TTL:     p.TTL,
 			}
 			if p.Name != "" {
 				dnsRecord.Name = p.Name

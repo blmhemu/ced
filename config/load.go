@@ -110,6 +110,7 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	f.StringVar(&cfg.DNS.Porkbun.SecretAPIKey, "dns.porkbun.secretapikey", defaultConfig.DNS.Porkbun.SecretAPIKey, "SecretAPIKey to connect to porkbun")
 	f.StringVar(&cfg.DNS.Porkbun.Domain, "dns.porkbun.domain", defaultPorkbun.Domain, "Porkbun domain to be updated")
 	f.StringVar(&cfg.DNS.Porkbun.Name, "dns.porkbun.name", defaultPorkbun.Name, "Porkbun subdmain domain to be updated \nUse * for wildcard record \nUnset or \"\" for root domain")
+	f.StringVar(&cfg.DNS.Porkbun.TTL, "dns.porkbun.ttl", defaultPorkbun.TTL, "How long the DNS is cached in local resolver \n Should be >= 300")
 
 	// Parse configuration
 	if err := f.ParseFlags(cmdline[1:], environ, envprefix, props); err != nil {
