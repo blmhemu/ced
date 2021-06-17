@@ -1,7 +1,7 @@
 module github.com/blmhemu/ced
 
 require (
-	github.com/blmhemu/porkbun-go v0.0.0-20210617050038-6ba23bd38847
+	github.com/blmhemu/porkbun-go v0.0.0-20210617094603-1e294544ef68
 	github.com/hashicorp/consul/api v1.8.1
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/magiconair/properties v1.8.5
