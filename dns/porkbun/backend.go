@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/blmhemu/consul-ext-dns/config"
-	dnsbackend "github.com/blmhemu/consul-ext-dns/dns"
+	"github.com/blmhemu/ced/config"
+	dnsbackend "github.com/blmhemu/ced/dns"
 	porkbun "github.com/blmhemu/porkbun-go"
 	"k8s.io/apimachinery/pkg/util/sets"
 )

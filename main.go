@@ -7,10 +7,10 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/blmhemu/consul-ext-dns/config"
-	dnsbackend "github.com/blmhemu/consul-ext-dns/dns"
-	"github.com/blmhemu/consul-ext-dns/dns/porkbun"
-	"github.com/blmhemu/consul-ext-dns/exit"
+	"github.com/blmhemu/ced/config"
+	dnsbackend "github.com/blmhemu/ced/dns"
+	"github.com/blmhemu/ced/dns/porkbun"
+	"github.com/blmhemu/ced/exit"
 	"github.com/hashicorp/consul/api"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
