@@ -59,7 +59,6 @@ func initBackend(cfg *config.Config) {
 		log.Printf("[FATAL] Cannot initialize DNS backend %s", err)
 		exit.Exit(1)
 	}
-
 }
 
 func watchLB(cfg *config.Config, updates chan []*api.ServiceEntry) {

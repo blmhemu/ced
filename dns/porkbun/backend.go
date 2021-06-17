@@ -35,7 +35,11 @@ func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
 		return nil, err
 	}
 	pbclient := &PBClient{Client: client, Domain: cfg.Domain, Name: cfg.Name}
-	pbclient.updateState()
+	// The below line updates the initial state.
+	// The creds will also be verified here.
+	if err := pbclient.updateState(); err != nil {
+		return nil, err
+	}
 	return pbclient, nil
 }
 
@@ -43,19 +47,20 @@ func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
 func (p *PBClient) WriteRecords(newRecords sets.String) error {
 	// This means the LB is down
 	// No need to update until it is back up again
-	if !newRecords.HasAny() {
+	if newRecords.Len() == 0 {
 		return nil
 	}
 	currRecords := p.fetchIPSet()
 	deletions := currRecords.Difference(newRecords)
 	additions := newRecords.Difference(*currRecords)
-	// No additions / deletions ? Good return
-	if !deletions.HasAny() && !additions.HasAny() {
+	// No additions or deletions ? Good return
+	if deletions.Len() == 0 && additions.Len() == 0 {
 		return nil
 	}
 	// Porkbun does not have delete all function.
 	// To minimize API calls, we instead use (this seemingly complex) edits when available
 	anyErrors := false
+	fmt.Printf("Got an update. Deletions - %s. Additions - %s\n", deletions.UnsortedList(), additions.UnsortedList())
 	for {
 		newip, newany := additions.PopAny()
 		oldip, oldany := deletions.PopAny()
@@ -70,7 +75,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 			if oldany {
 				err := p.Client.EditRecord(p.Domain, p.State[oldip], &dnsRecord)
 				if err != nil {
-					fmt.Printf("[ERROR] Failed editing record %s", err)
+					fmt.Println("[ERROR] Failed editing record", err)
 					anyErrors = true
 				} else {
 					p.State[newip] = p.State[oldip]
@@ -79,7 +84,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 			} else {
 				id, err := p.Client.CreateRecord(p.Domain, &dnsRecord)
 				if err != nil {
-					fmt.Printf("[ERROR] Failed creating record %s", err)
+					fmt.Println("[ERROR] Failed creating record", err)
 					anyErrors = true
 				} else {
 					p.State[newip] = id
@@ -88,7 +93,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 			}
 		} else if oldany {
 			if err := p.Client.DeleteRecord(p.Domain, p.State[oldip]); err != nil {
-				fmt.Printf("[ERROR] Failed deleting record %s", err)
+				fmt.Println("[ERROR] Failed deleting record", err)
 				anyErrors = true
 			} else {
 				delete(p.State, oldip)

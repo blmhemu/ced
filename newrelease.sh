@@ -1,4 +1,4 @@
-export CED_VERSION="0.1.7"
+export CED_VERSION="0.1.8"
 # Create git tags
 if git rev-parse "v$CED_VERSION" >/dev/null 2>&1; then
     echo "Tag already present"
