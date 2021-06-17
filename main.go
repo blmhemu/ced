@@ -56,7 +56,6 @@ func initBackend(cfg *config.Config) {
 		exit.Exit(1)
 	}
 	if err != nil {
-		// Print and exit
 		log.Printf("[FATAL] Cannot initialize DNS backend %s", err)
 		exit.Exit(1)
 	}
