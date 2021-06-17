@@ -69,7 +69,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 	// Porkbun does not have delete all function.
 	// To minimize API calls, we instead use (this seemingly complex) edits when available
 	anyErrors := false
-	fmt.Printf("Got an update. Deletions - %s. Additions - %s\n", deletions.UnsortedList(), additions.UnsortedList())
+	fmt.Printf("Update: Deletions - %s Additions - %s\n", deletions.UnsortedList(), additions.UnsortedList())
 	for {
 		newip, newany := additions.PopAny()
 		oldip, oldany := deletions.PopAny()
