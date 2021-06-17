@@ -15,7 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
-var version = "0.1"
+var version = "0.1.0"
 
 func main() {
 
