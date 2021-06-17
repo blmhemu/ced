@@ -41,6 +41,11 @@ func NewBackend(cfg *config.Porkbun) (dnsbackend.Backend, error) {
 
 // How to handle the bunch of errors ??? Currently just loggin them.
 func (p *PBClient) WriteRecords(newRecords sets.String) error {
+	// This means the LB is down
+	// No need to update until it is back up again
+	if !newRecords.HasAny() {
+		return nil
+	}
 	currRecords := p.fetchIPSet()
 	deletions := currRecords.Difference(newRecords)
 	additions := newRecords.Difference(*currRecords)
@@ -48,14 +53,9 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 	if !deletions.HasAny() && !additions.HasAny() {
 		return nil
 	}
-	// This means the LB is down
-	// No need to update until it is back up again
-	if !newRecords.HasAny() {
-		return nil
-	}
 	// Porkbun does not have delete all function.
 	// To minimize API calls, we instead use edit when available
-	needStateUpdate := false
+	anyErrors := false
 	for {
 		newip, newany := additions.PopAny()
 		oldip, oldany := deletions.PopAny()
@@ -71,7 +71,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 				err := p.Client.EditRecord(p.Domain, p.State[oldip], &dnsRecord)
 				if err != nil {
 					fmt.Printf("[ERROR] Failed editing record %s", err)
-					needStateUpdate = true
+					anyErrors = true
 				} else {
 					p.State[newip] = p.State[oldip]
 					delete(p.State, oldip)
@@ -80,7 +80,7 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 				id, err := p.Client.CreateRecord(p.Domain, &dnsRecord)
 				if err != nil {
 					fmt.Printf("[ERROR] Failed creating record %s", err)
-					needStateUpdate = true
+					anyErrors = true
 				} else {
 					p.State[newip] = id
 					delete(p.State, oldip)
@@ -89,17 +89,19 @@ func (p *PBClient) WriteRecords(newRecords sets.String) error {
 		} else if oldany {
 			if err := p.Client.DeleteRecord(p.Domain, p.State[oldip]); err != nil {
 				fmt.Printf("[ERROR] Failed deleting record %s", err)
-				needStateUpdate = true
+				anyErrors = true
+			} else {
+				delete(p.State, oldip)
 			}
 		} else {
 			break
 		}
 	}
-	if needStateUpdate {
+	if anyErrors {
 		if err := p.updateState(); err != nil {
 			fmt.Printf("[ERROR] Failed updating state %s", err)
-			return err
 		}
+		return fmt.Errorf("There were some errors in some of the calls. Please check the logs.")
 	}
 	return nil
 }
