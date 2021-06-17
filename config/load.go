@@ -120,14 +120,7 @@ func load(cmdline, environ, envprefix []string, props *properties.Properties) (c
 	if cfg.Service == "" {
 		return nil, fmt.Errorf("No service was provided to track")
 	}
-	// Only porkbun dns backend is supported atm.
 	cfg.DNS.Backend = strings.ToLower(cfg.DNS.Backend)
-	// Use a case statement if possible
-	if cfg.DNS.Backend == "" {
-		return nil, fmt.Errorf("DNS backend not provided")
-	} else if cfg.DNS.Backend == "porkbun" {
-		return nil, fmt.Errorf("DNS backend `%s` not supported", cfg.DNS.Backend)
-	}
 
 	return cfg, nil
 }

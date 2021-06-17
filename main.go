@@ -51,10 +51,13 @@ func initBackend(cfg *config.Config) {
 	switch cfg.DNS.Backend {
 	case dnsbackend.Porkbun:
 		dnsbackend.Default, err = porkbun.NewBackend(&cfg.DNS.Porkbun)
+	default:
+		log.Printf("[FATAL] Please provide a valid DNS backend")
+		exit.Exit(1)
 	}
 	if err != nil {
 		// Print and exit
-		log.Printf("[FATAL] Cannot initialize DNS backend")
+		log.Printf("[FATAL] Cannot initialize DNS backend %s", err)
 		exit.Exit(1)
 	}
 
