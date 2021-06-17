@@ -1,7 +1,12 @@
-export CED_VERSION="0.1.2"
+export CED_VERSION="0.1.3"
 # Create git tags
-git tag -a v$CED_VERSION &&
-git push origin v$CED_VERSION &&
+if git rev-parse "v$CED_VERSION" >/dev/null 2>&1; then
+    echo "Tag already present"
+else
+    echo "Tag not present. Creating"
+    git tag -a "v$CED_VERSION" &&
+    git push origin "v$CED_VERSION"
+fi
 # Run go releaser for binary releases
 goreleaser release --rm-dist &&
 # Run docker build push
