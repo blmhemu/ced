@@ -7,8 +7,11 @@ type Config struct {
 }
 
 type Consul struct {
-	Addr   string
-	Scheme string
+	Addr     string
+	Scheme   string
+	CAFile   string
+	CertFile string
+	KeyFile  string
 }
 
 type DNS struct {
@@ -31,8 +34,11 @@ var defaultConfig = Config{
 }
 
 var defaultConsul = Consul{
-	Addr:   "localhost:8500",
-	Scheme: "http",
+	Addr:     "localhost:8500",
+	Scheme:   "http",
+	CAFile:   "",
+	CertFile: "",
+	KeyFile:  "",
 }
 
 var defaultDNS = DNS{

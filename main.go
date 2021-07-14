@@ -65,6 +65,11 @@ func watchLB(cfg *config.Config, updates chan []*api.ServiceEntry) {
 	client, err := api.NewClient(&api.Config{
 		Address: cfg.Consul.Addr,
 		Scheme:  cfg.Consul.Scheme,
+		TLSConfig: api.TLSConfig{
+			CAFile:   cfg.Consul.CAFile,
+			CertFile: cfg.Consul.CertFile,
+			KeyFile:  cfg.Consul.KeyFile,
+		},
 	})
 	if err != nil {
 		panic(err)
