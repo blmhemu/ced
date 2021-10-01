@@ -96,7 +96,7 @@ func pushUpdatesToBackend(updates chan []*api.ServiceEntry) {
 	for svcs := range updates {
 		newIPSet := sets.NewString()
 		for _, svc := range svcs {
-			newIPSet.Insert(svc.Node.Address)
+			newIPSet.Insert(svc.Service.Address)
 		}
 		dnsbackend.Default.WriteRecords(newIPSet)
 	}
